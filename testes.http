@@ -1,0 +1,76 @@
+@base = http://localhost:3000
+
+### ===== AULAS =====
+
+### 1. Listar aulas -> 200
+GET {{base}}/aula
+
+### 2. Cadastrar aula -> 201
+POST {{base}}/aula
+Content-Type: application/json
+
+{ "componente": "História" }
+
+### 3. Cadastrar aula sem nome -> 400
+POST {{base}}/aula
+Content-Type: application/json
+
+{ "componente": "" }
+
+### ===== HORÁRIOS =====
+
+### 4. POST /horario com aula inexistente -> 404 (chave estrangeira)
+POST {{base}}/horario
+Content-Type: application/json
+
+{ "dia": "segunda", "hora": "07:20", "aula_id": 9999 }
+
+### 5. POST /horario válido -> 201
+POST {{base}}/horario
+Content-Type: application/json
+
+{ "dia": "segunda", "hora": "07:20", "aula_id": 1 }
+
+### 6. POST /horario repetido (mesmo dia e hora) -> 409
+POST {{base}}/horario
+Content-Type: application/json
+
+{ "dia": "segunda", "hora": "07:20", "aula_id": 2 }
+
+### 7. POST /horario com dia inválido -> 400
+POST {{base}}/horario
+Content-Type: application/json
+
+{ "dia": "domingo", "hora": "07:20", "aula_id": 1 }
+
+### 8. POST /horario sem campos -> 400
+POST {{base}}/horario
+Content-Type: application/json
+
+{ "dia": "segunda" }
+
+### 9. GET /horario/segunda -> 200 com a lista
+GET {{base}}/horario/segunda
+
+### 10. GET /horario/domingo -> 400
+GET {{base}}/horario/domingo
+
+### ===== EXCLUSÕES =====
+
+### 11. DELETE /aula/1 com horário vinculado -> 409
+DELETE {{base}}/aula/1
+
+### 12. DELETE /horario/1 -> 200 (troque o 1 pelo id retornado no teste 5)
+DELETE {{base}}/horario/1
+
+### 13. DELETE /horario/1 de novo -> 404
+DELETE {{base}}/horario/1
+
+### 14. DELETE /aula/1 agora sem horários -> 200
+DELETE {{base}}/aula/1
+
+### 15. DELETE /aula/9999 -> 404
+DELETE {{base}}/aula/9999
+
+### 16. DELETE /aula/abc -> 400
+DELETE {{base}}/aula/abc
